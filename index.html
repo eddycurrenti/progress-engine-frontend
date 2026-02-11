@@ -312,35 +312,56 @@ input, select{
     background:#dc2626;
 }
 
-/* ================= TASK ================= */
-
 .task{
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
     background:#334155;
-    padding:12px 16px;
-    border-radius:14px;
+    padding:14px 16px;
+    border-radius:16px;
+    margin-top:12px;
     gap:12px;
-    margin-top:8px;
-    flex-wrap:wrap; /* allow wrapping properly */
+    transition:all .25s ease;
+}
+
+.task:hover{
+    background:#3b4a63;
 }
 
 .task-left{
     display:flex;
     align-items:center;
     gap:12px;
-    flex:1;              /* take available space */
-    min-width:0;         /* important for text wrapping */
+    flex:1;
+    min-width:0;
 }
 
 .task-left span{
+    font-size:15px;
+    color:#e2e8f0;
     word-break:break-word;
-    overflow-wrap:break-word;
 }
 
+.task input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    accent-color:#60a5fa;
+    cursor:pointer;
+}
 
-/* ================= IMAGE ================= */
+.delete-btn{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.15);
+    padding:6px 12px;
+    font-size:13px;
+    border-radius:10px;
+    transition:all .2s ease;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+    border-color:#dc2626;
+}
 
 img{
     margin-top:10px;
@@ -487,6 +508,17 @@ input, select{
         display:none !important;
     }
 }
+@media(max-width:600px){
+    .task{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .delete-btn{
+        align-self:flex-end;
+    }
+}
+
 
 
 </style>
@@ -571,10 +603,9 @@ async function loadTasks(){
         div.className="task";
         div.innerHTML=`
             <div class="task-left">
-                <input type="checkbox" onchange="deleteTask('${task._id}')">
-                <span>${task.title}</span>
+            <span>${task.title}</span>
             </div>
-            <button class="btn delete-btn" onclick="deleteTask('${task._id}')">Delete</button>
+            <button class="delete-btn" onclick="deleteTask('${task._id}')">Delete</button>
         `;
         list.appendChild(div);
     });
