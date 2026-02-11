@@ -321,16 +321,24 @@ input, select{
     background:#334155;
     padding:12px 16px;
     border-radius:14px;
-    gap:10px;
+    gap:12px;
     margin-top:8px;
+    flex-wrap:wrap; /* allow wrapping properly */
 }
 
 .task-left{
     display:flex;
     align-items:center;
     gap:12px;
-    word-break:break-word;
+    flex:1;              /* take available space */
+    min-width:0;         /* important for text wrapping */
 }
+
+.task-left span{
+    word-break:break-word;
+    overflow-wrap:break-word;
+}
+
 
 /* ================= IMAGE ================= */
 
@@ -469,6 +477,17 @@ input, select{
         transform:translateY(0);
     }
 }
+@media (max-width: 768px){
+    body{
+        cursor:auto;
+    }
+
+    .cursor-dot,
+    .cursor-outline{
+        display:none !important;
+    }
+}
+
 
 </style>
 </head>
