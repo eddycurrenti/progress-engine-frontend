@@ -4,66 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tejas ki Webiste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sirin+Stencil&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
-
-/* ================= CUSTOM CURSOR =================
-
-body{
-    cursor:none;
-}
-
-.cursor-dot,
-.cursor-outline{
-     z-index:10;
-    position:fixed;
-    top:0;
-    left:0;
-    pointer-events:none;
-    border-radius:50%;
-    transform:translate(-50%,-50%);
     
-    will-change:transform;
+  font-family: "Sirin Stencil", sans-serif;
+  font-weight: 400;
+  font-style: normal
+
 }
 
-
-.cursor-dot{
-    z-index:10000;
-    width:6px;
-    height:6px;
-    background:#60a5fa;
-    box-shadow:0 0 12px rgba(96,165,250,0.8);
-}
-
-.cursor-outline{
-    width:32px;
-    height:32px;
-    border:1.8px solid rgba(96,165,250,0.8);
-    box-shadow:
-        0 0 18px rgba(96,165,250,0.6),
-        0 0 35px rgba(96,165,250,0.3);
-    transition:
-        transform .25s cubic-bezier(.19,1,.22,1),
-        background .2s ease;
-}
-
-.cursor-hover{
-    transform:translate(-50%,-50%) scale(1.9);
-    background:rgba(96,165,250,0.08);
-}
- */
-
- /* ================= CUSTOM CURSOR ================= */
+/* ===== DEEP PREMIUM OLED BLACK BACKGROUND ===== */
 
 body{
-    cursor:none;
+    min-height:100vh;
+    color:white;
+    overflow-x:hidden;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.04), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(255,255,255,0.03), transparent 50%),
+        linear-gradient(180deg, #050505 0%, #000000 100%);
+    position:relative;
 }
+
+/* subtle center glow for depth */
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at center,
+            rgba(255,255,255,0.02) 0%,
+            transparent 60%);
+    pointer-events:none;
+    z-index:-1;
+}
+
 
 .cursor-dot{
     position:fixed;
@@ -115,65 +98,60 @@ body{
 
 /* ================= STRONG PARALLAX PIXEL BACKGROUND ================= */
 
-body{
-    min-height:100vh;
-    color:white;
-    overflow-x:hidden;
-    background:#0f172a;
-    position:relative;
-}
-
-body::before,
-body::after{
-    content:"";
-    position:fixed;
-    width:300%;
-    height:300%;
-    top:-100%;
-    left:-100%;
-    pointer-events:none;
-    z-index:-2;
-}
-
-body::before{
-    background-image:
-        radial-gradient(#60a5fa 1.5px, transparent 1.5px);
-    background-size:30px 30px;
-    opacity:0.35;
-    animation:moveFast 30s linear infinite;
-}
-
-body::after{
-    background-image:
-        radial-gradient(#2563eb 2px, transparent 2px);
-    background-size:80px 80px;
-    opacity:0.18;
-    animation:moveSlow 80s linear infinite;
-}
-
-@keyframes moveFast{
-    from{transform:translate(0,0);}
-    to{transform:translate(400px,400px);}
-}
-
-@keyframes moveSlow{
-    from{transform:translate(0,0);}
-    to{transform:translate(200px,200px);}
-}
-
 /* ================= LAYOUT ================= */
 
 .container{
     max-width:1200px;
     margin:auto;
-    padding:40px 20px;
+    padding:40px 200px 40px 20px; /* space for stats panel */
 }
+
 
 h1{
     text-align:center;
-    margin-bottom:50px;
-    font-weight:600;
+    margin-bottom:60px;
+    font-size:42px;
+    font-weight:700;
+    letter-spacing:1.5px;
+
+    /* Gradient text */
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #d1d5db 40%,
+        #9ca3af 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    position: relative;
+    opacity:0;
+    transform:translateY(-30px);
+    animation: titleDrop 0.8s cubic-bezier(.19,1,.22,1) forwards;
+    animation-delay:0.4s;
 }
+
+/* Soft glow behind text */
+h1::after{
+    content: "My Personal Utility Dashboard";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    z-index: -1;
+
+    background: linear-gradient(
+        180deg,
+        rgba(59,130,246,0.6),
+        rgba(59,130,246,0.2)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter: blur(18px);
+    opacity: 0.6;
+}
+
 
 .grid{
     display:grid;
@@ -426,12 +404,6 @@ body{
 }
 
 /* Heading slide down */
-h1{
-    opacity:0;
-    transform:translateY(-30px);
-    animation: titleDrop 0.8s cubic-bezier(.19,1,.22,1) forwards;
-    animation-delay:0.4s;
-}
 
 @keyframes titleDrop{
     to{
@@ -477,6 +449,66 @@ input, select{
     animation-delay:1.2s;
 }
 
+/* ================= RIGHT SIDE STATS ================= */
+
+.stats-panel{
+    position:fixed;
+    right:40px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:40px;
+    z-index:40;
+}
+
+.stat-item{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.stat-circle{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    border:6px solid;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-weight:600;
+    background:rgba(30,41,59,0.9);
+}
+
+
+.stat-easy{ border-color:#22c55e; }
+.stat-medium{ border-color:#f59e0b; }
+.stat-hard{ border-color:#ef4444; }
+
+.stat-text{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.stat-text span:first-child{
+    font-size:18px;
+}
+
+.stat-text span:last-child{
+    font-size:13px;
+    color:#94a3b8;
+}
+
+/* Hide on small screens */
+@media(max-width:1000px){
+    .stats-panel{
+        display:none;
+    }
+}
+
+
 @keyframes inputFade{
     to{
         opacity:1;
@@ -519,7 +551,77 @@ input, select{
     }
 }
 
+/* ================= PROFILE CARD ================= */
 
+.profile-card{
+    background:rgba(30,41,59,0.95);
+    padding:20px;
+    border-radius:18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
+
+.profile-name{
+    font-size:16px;
+    font-weight:600;
+}
+
+.profile-email{
+    font-size:12px;
+    color:#94a3b8;
+    margin-bottom:10px;
+}
+
+.logout-mini{
+    background:#111;
+    border:none;
+    padding:8px 14px;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
+    font-size:12px;
+    transition:0.2s ease;
+}
+
+.logout-mini:hover{
+    background:#dc2626;
+}
+
+
+/* Profile header row */
+
+.profile-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.profile-avatar{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+
+    background:#1f2937; /* flat dark circle */
+    border:1px solid rgba(255,255,255,0.08);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:14px;
+    font-weight:600;
+    color:#e5e7eb;
+}
+
+/* Slightly cleaner name */
+.profile-name{
+    font-size:18px;
+    font-weight:600;
+}
 
 </style>
 </head>
@@ -532,7 +634,11 @@ input, select{
 <canvas id="particles"></canvas>
 
 <div class="container">
+    <div>
 <h1>My Personal Utility Dashboard</h1>
+
+    </div>
+
 
 <div class="grid">
 
@@ -577,24 +683,159 @@ input, select{
 </div>
 
 </div>
+
 </div>
 
+<div class="stats-panel">
+
+    <!-- USER INFO -->
+    <div class="profile-card">
+        <div class="profile-header">
+    <div class="profile-avatar" id="profileAvatar"></div>
+    <div class="profile-name" id="profileName"></div>
+</div>
+
+        <button class="logout-mini" onclick="logout()">Logout</button>
+        <button class="btn" onclick="goToLeetCode()">GoTOLeetCode</button>
+        
+        <button class="btn" onclick="goToProjects()">My Projects</button>
+
+    </div>
+
+    <!-- EASY -->
+    <div class="stat-item">
+        <div class="stat-circle stat-easy" id="easyCount">0</div>
+        <div class="stat-text">
+            <span>Easy</span>
+            <span>Solved</span>
+        </div>
+    </div>
+
+    <!-- MEDIUM -->
+    <div class="stat-item">
+        <div class="stat-circle stat-medium" id="mediumCount">0</div>
+        <div class="stat-text">
+            <span>Medium</span>
+            <span>Solved</span>
+        </div>
+    </div>
+
+    <!-- HARD -->
+    <div class="stat-item">
+        <div class="stat-circle stat-hard" id="hardCount">0</div>
+        <div class="stat-text">
+            <span>Hard</span>
+            <span>Solved</span>
+        </div>
+    </div>
+    
+</div>
 <div class="footer">
     <div><strong>Patil Tejas Ashok</strong></div>
     <div>reso49@gmail.com</div>
 </div>
 
+
 <script>
-const BASE="https://todo-qr-backend.onrender.com";
+const BASE = "http://localhost:3000";
+if (!localStorage.getItem("token")) {
+    window.location.href = "/login.html";
+}
+
 
 const gradeMap={
 "S":10,"A":9,"B":8,"C":7,"D":6,"E":5,"F":0
 };
 
 /* ================= TASK ================= */
+async function authFetch(url, options = {}) {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "/login.html";
+        return;
+    }
+
+    options.headers = {
+        ...(options.headers || {}),
+        "Authorization": "Bearer " + token
+    };
+
+    const res = await fetch(url, options);
+
+    if (res.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/login.html";
+        return;
+    }
+
+    return res;
+}
+
+async function loadUser() {
+    try {
+        const res = await fetch(`${BASE}/signin/getUser`, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+
+        if (!res.ok) {
+            console.log("Failed to load user");
+            return;
+        }
+
+        const name = await res.text();   // ← IMPORTANT (not res.json())
+
+        document.getElementById("profileName").innerText = name;
+
+    } catch (err) {
+        console.log("Error loading user:", err);
+    }
+}
+
+loadUser();
+
+
+async function loadStats() {
+    try {
+        const res = await fetch(`${BASE}/leetcode/user`, {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+
+        if (!res.ok) {
+            console.log("Failed to fetch stats");
+            return;
+        }
+
+        const data = await res.json();
+
+        let easy = 0;
+        let medium = 0;
+        let hard = 0;
+
+        data.forEach(q => {
+            if (q.level === "Easy") easy++;
+            if (q.level === "Medium") medium++;
+            if (q.level === "Hard") hard++;
+        });
+
+        document.getElementById("easyCount").innerText = easy;
+        document.getElementById("mediumCount").innerText = medium;
+        document.getElementById("hardCount").innerText = hard;
+
+    } catch (err) {
+        console.log("Error:", err);
+    }
+}
+
 
 async function loadTasks(){
-    const res=await fetch(`${BASE}/todo/getAllTask`);
+    const res=await authFetch(`${BASE}/todo/getAllTask`);
     const data=await res.json();
     const list=document.getElementById("taskList");
     list.innerHTML="";
@@ -610,21 +851,27 @@ async function loadTasks(){
         list.appendChild(div);
     });
 }
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/login.html";
+}
+
 
 async function addTask(){
     const title=document.getElementById("taskTitle").value;
     if(!title)return;
-    await fetch(`${BASE}/todo/taskCreate`,{
+    await authFetch(`${BASE}/todo/taskCreate`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({title,createTime:new Date().toLocaleString()})
     });
     document.getElementById("taskTitle").value="";
     loadTasks();
+    
 }
 
 async function deleteTask(id){
-    await fetch(`${BASE}/todo/deleteTask`,{
+    await authFetch(`${BASE}/todo/deleteTask`,{
         method:"DELETE",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({id})
@@ -634,12 +881,13 @@ async function deleteTask(id){
 
 loadTasks();
 
+
 /* ================= QR ================= */
 
 async function generateQR(){
     const URL=document.getElementById("qrInput").value;
     if(!URL)return;
-    const res=await fetch(`${BASE}/qr/getUrl`,{
+    const res=await authFetch(`${BASE}/qr/getUrl`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({URL})
@@ -680,7 +928,7 @@ async function calculateGPA(){
         }
     });
 
-    const res=await fetch(`${BASE}/gpa1/gpa2`,{
+    const res=await authFetch(`${BASE}/gpa1/gpa2`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({subjects})
@@ -696,7 +944,7 @@ async function calculateCGPA(){
     const newCredits=Number(document.getElementById("newCredits").value);
     const newCgpa=Number(document.getElementById("newCGPA").value);
 
-    const res=await fetch(`${BASE}/cgpa1/cgpa2`,{
+    const res=await authFetch(`${BASE}/cgpa1/cgpa2`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({oldCredits,oldCGPA,newCredits,newCgpa})
@@ -778,6 +1026,14 @@ function initParticles(){
     }
 }
 
+function goToLeetCode() {
+    window.location.href = "/leetcode.html";
+}
+
+function goToProjects() {
+    window.location.href = "/project.html";
+}
+
 function animateParticles(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     particles.forEach(p=>{
@@ -846,6 +1102,40 @@ hoverElements.forEach(el=>{
 });
 
 
+
+function renderChart(easy, medium, hard) {
+
+    const ctx = document.getElementById("difficultyChart");
+
+    new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Easy", "Medium", "Hard"],
+            datasets: [{
+                data: [easy, medium, hard],
+                backgroundColor: [
+                    "#22c55e",
+                    "#f59e0b",
+                    "#ef4444"
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#e2e8f0",
+                        font: { size: 14 }
+                    }
+                }
+            },
+            cutout: "70%"
+        }
+    });
+}
+window.onload = loadStats;
 </script>
 
 </body>

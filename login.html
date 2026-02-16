@@ -1,0 +1,692 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+}
+
+.container {
+    background: rgba(30, 41, 59, 0.95);
+    padding: 35px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    background: #334155;
+    color: white;
+}
+
+input:focus {
+    outline: 2px solid #3b82f6;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.secondary-btn {
+    background: #475569;
+}
+
+.secondary-btn:hover {
+    background: #334155;
+}
+
+.message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.error {
+    color: #f87171;
+}
+
+.success {
+    color: #4ade80;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Login</h2>
+
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+
+    <button onclick="login()">Login</button>
+
+    <button class="secondary-btn" onclick="goToSignup()">
+        Create Account
+    </button>
+
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+const BASE = "http://localhost:3000";
+
+// If already logged in → redirect
+if (localStorage.getItem("token")) {
+    window.location.href = "/index.html";
+}
+
+function goToSignup() {
+    window.location.href = "/signup.html";
+}
+
+async function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const messageBox = document.getElementById("message");
+
+    messageBox.className = "message";
+    messageBox.innerText = "";
+
+    if (!username || !password) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Please fill all fields";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE}/login1/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageBox.classList.add("error");
+            messageBox.innerText = data.message || "Invalid credentials";
+            return;
+        }
+
+        // Store token
+        localStorage.setItem("token", data.token);
+
+        messageBox.classList.add("success");
+        messageBox.innerText = "Login successful. Redirecting...";
+
+        setTimeout(() => {
+            window.location.href = "/index.html";
+        }, 1000);
+
+    } catch (error) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Server error. Try again later.";
+    }
+}
+</script>
+
+</body>
+</html> -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(-45deg, #0f172a, #1e293b, #1e3a8a, #0f172a);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #e2e8f0;
+}
+
+/* Card */
+.container {
+    width: 380px;
+    padding: 50px 40px;
+    border-radius: 20px;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    animation: fadeIn 0.6s ease;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+/* Floating input */
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 18px 14px 14px 14px;
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    background: #1f2937;
+    color: #e5e7eb;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.input-group label {
+    position: absolute;
+    left: 14px;
+    top: 16px;
+    font-size: 14px;
+    color: #9ca3af;
+    transition: 0.2s ease;
+    pointer-events: none;
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: 6px;
+    font-size: 11px;
+    color: #3b82f6;
+}
+
+/* Password toggle */
+.toggle {
+    position: absolute;
+    right: 14px;
+    top: 16px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+/* Buttons */
+.primary-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 30px rgba(37,99,235,0.4);
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #1f2937;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background: #374151;
+}
+
+/* Message */
+.message {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    min-height: 18px;
+}
+
+.error { color: #f87171; }
+.success { color: #4ade80; }
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Welcome Back</h2>
+
+    <div class="input-group">
+        <input type="text" id="username" placeholder=" " required>
+        <label>Username</label>
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" placeholder=" " required>
+        <label>Password</label>
+        <span class="toggle" onclick="togglePassword()">Show</span>
+    </div>
+
+    <button class="primary-btn" onclick="login()" id="loginBtn">Login</button>
+
+    <button class="secondary-btn" onclick="goToSignup()">
+        Create Account
+    </button>
+
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+const BASE = "http://localhost:3000";
+
+if (localStorage.getItem("token")) {
+    window.location.href = "/index.html";
+}
+
+function goToSignup() {
+    window.location.href = "/signup.html";
+}
+
+function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+async function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const messageBox = document.getElementById("message");
+    const btn = document.getElementById("loginBtn");
+
+    messageBox.className = "message";
+    messageBox.innerText = "";
+
+    if (!username || !password) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Please fill all fields";
+        return;
+    }
+
+    btn.innerText = "Logging in...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch(`${BASE}/login1/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageBox.classList.add("error");
+            messageBox.innerText = data.message || "Invalid credentials";
+            btn.innerText = "Login";
+            btn.disabled = false;
+            return;
+        }
+
+        localStorage.setItem("token", data.token);
+        messageBox.classList.add("success");
+        messageBox.innerText = "Login successful. Redirecting...";
+
+        setTimeout(() => {
+            window.location.href = "/index.html";
+        }, 1000);
+
+    } catch (error) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Server error.";
+        btn.innerText = "Login";
+        btn.disabled = false;
+    }
+}
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+ background: linear-gradient(
+        135deg,
+        #30364F,
+        #2a3147,
+        #ACBAC4
+    );
+  background-size: 400% 400%;
+    animation: gradientMove 18s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #F0F0DB;
+}
+
+/* Card */
+.container {
+    width: 380px;
+    padding: 50px 40px;
+    border-radius: 20px;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    animation: fadeIn 0.6s ease;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 600;
+    font-size: 26px;
+}
+
+/* Floating input */
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 18px 14px 14px 14px;
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    background: #1f2937;
+    color: #e5e7eb;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.input-group label {
+    position: absolute;
+    left: 14px;
+    top: 16px;
+    font-size: 14px;
+    color: #9ca3af;
+    transition: 0.2s ease;
+    pointer-events: none;
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: 6px;
+    font-size: 11px;
+    color: #3b82f6;
+}
+
+/* Password toggle */
+.toggle {
+    position: absolute;
+    right: 14px;
+    top: 16px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+/* Buttons */
+.primary-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    cursor: pointer;
+    transition: 0.25s ease;
+    font-family: inherit;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 10px rgba(37,99,235,0.4);
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #324359;
+    color: #fafafa;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-family: inherit;
+}
+
+.secondary-btn:hover {
+    background: #56647b;
+}
+
+/* Message */
+.message {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    min-height: 18px;
+}
+
+.error { color: #f87171; }
+.success { color: #4ade80; }
+.footer{
+    text-align:center;
+    padding:30px 10px;
+    margin-top:50px;
+    border-top:1px solid rgba(255,255,255,0.1);
+    font-size:14px;
+    color:#94a3b8;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Welcome Back</h2>
+
+    <div class="input-group">
+        <input type="text" id="username" placeholder=" " required>
+        <label>Username</label>
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" placeholder=" " required>
+        <label>Password</label>
+        <span class="toggle" onclick="togglePassword()">Show</span>
+    </div>
+
+    <button class="primary-btn" onclick="login()" id="loginBtn">Login</button>
+
+    <button class="secondary-btn" onclick="goToSignup()">
+        Create Account
+    </button>
+
+    <div id="message" class="message"></div>
+</div>
+
+
+
+<script>
+const BASE = "http://localhost:3000";
+
+if (localStorage.getItem("token")) {
+    window.location.href = "/index.html";
+}
+
+function goToSignup() {
+    window.location.href = "/signup.html";
+}
+
+function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+async function login() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const messageBox = document.getElementById("message");
+    const btn = document.getElementById("loginBtn");
+
+    messageBox.className = "message";
+    messageBox.innerText = "";
+
+    if (!username || !password) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Please fill all fields";
+        return;
+    }
+
+    btn.innerText = "Logging in...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch(`${BASE}/login1/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageBox.classList.add("error");
+            messageBox.innerText = data.message || "Invalid credentials";
+            btn.innerText = "Login";
+            btn.disabled = false;
+            return;
+        }
+
+        localStorage.setItem("token", data.token);
+        messageBox.classList.add("success");
+        messageBox.innerText = "Login successful. Redirecting...";
+
+        setTimeout(() => {
+            window.location.href = "/index.html";
+        }, 1000);
+
+    } catch (error) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Server error.";
+        btn.innerText = "Login";
+        btn.disabled = false;
+    }
+}
+
+
+</script>
+
+</body>
+</html>

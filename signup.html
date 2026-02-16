@@ -1,0 +1,316 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Create Account</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="goToLogin()" style="margin-top:10px;background:#555;">
+        Back to Login
+    </button>
+    <div id="message"></div>
+</div>
+
+<script>
+
+function goToLogin() {
+    window.location.href = "/login.html";
+}
+
+async function signup() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const messageBox = document.getElementById("message");
+
+    try {
+        const response = await fetch("http://localhost:3000/signin/createnewUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageBox.className = "error";
+            messageBox.innerText = data.message || "Signup failed";
+            return;
+        }
+
+        messageBox.className = "success";
+        messageBox.innerText = "Account created successfully. Redirecting...";
+
+        setTimeout(() => {
+            window.location.href = "/login.html";
+        }, 1500);
+
+    } catch (error) {
+        messageBox.className = "error";
+        messageBox.innerText = "Server error";
+    }
+}
+
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Create Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&display=swap" rel="stylesheet">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+
+    background: linear-gradient(135deg, #0f172a, #1e293b 60%, #1e3a8a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Main Card */
+.container {
+    width: 380px;
+    padding: 48px 40px;
+    border-radius: 20px;
+    background: #111827;
+    box-shadow: 
+        0 40px 80px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    animation: fadeIn 0.5s ease;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    margin-bottom: 36px;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+    font-size: 24px;
+    color: #f1f5f9;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    background: #1f2937;
+    color: #e5e7eb;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+input::placeholder {
+    color: #9ca3af;
+}
+
+input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+}
+
+/* Primary Button */
+.primary-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 30px rgba(37,99,235,0.4);
+}
+
+/* Secondary Button */
+.secondary-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #1f2937;
+    color: #cbd5e1;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.secondary-btn:hover {
+    background: #374151;
+}
+
+/* Message */
+.message {
+    margin-top: 18px;
+    text-align: center;
+    font-family: "Rubik Doodle Shadow", system-ui;
+  font-weight: 400;
+  font-style: normal;
+    font-size: 13px;
+    min-height: 18px;
+}
+
+.error {
+    color: #f87171;
+}
+
+.success {
+    color: #4ade80;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Create Account</h2>
+    <input type="text" id="name" placeholder="Name" />
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+
+    <button class="primary-btn" onclick="signup()">Sign Up</button>
+
+    <button class="secondary-btn" onclick="goToLogin()">
+        Back to Login
+    </button>
+
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+function goToLogin() {
+    window.location.href = "/login.html";
+}
+
+async function signup() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const messageBox = document.getElementById("message");
+
+    messageBox.className = "message";
+    messageBox.innerText = "";
+
+    if (!username || !password) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Please fill all fields";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/signin/createnewUser", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageBox.classList.add("error");
+            messageBox.innerText = data.message || "Signup failed";
+            return;
+        }
+
+        messageBox.classList.add("success");
+        messageBox.innerText = "Account created. Redirecting...";
+
+        setTimeout(() => {
+            window.location.href = "/login.html";
+        }, 1200);
+
+    } catch (error) {
+        messageBox.classList.add("error");
+        messageBox.innerText = "Server error";
+    }
+}
+</script>
+
+</body>
+</html>
