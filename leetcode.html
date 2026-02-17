@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sirin+Stencil&display=swap" rel="stylesheet">
-    <link rel="icon" href="favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
 
     <style>
         * {
@@ -161,17 +161,29 @@
         }
 
         .circle {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            border: 6px solid;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 20px;
-            background: rgba(15, 23, 42, 0.6);
-        }
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    background: #0f172a;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* inner core */
+.circle::after {
+    content: "";
+    position: absolute;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: #111c33;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.7);
+}
+
 
         .easy {
             border-color: #22c55e;
@@ -332,7 +344,7 @@
 
         /* Active state */
         .question-item.active .question-body {
-            max-height: none;
+            max-height: 600px;
             padding: 20px 22px;
         }
 
@@ -536,6 +548,15 @@
 
             <!-- LEFT -->
             <div class="card">
+                <div style="display:flex; gap:15px; margin-bottom:20px;">
+    
+   <select id="filterCategory" onchange="applyFilters()">
+    <option value="">All Categories</option>
+</select>
+
+
+</div>
+
                 <div id="questions" style="margin-top:20px;"></div>
 
             </div>
@@ -630,6 +651,12 @@
         if (!localStorage.getItem("token")) {
             window.location.href = "/login.html";
         }
+        let allQuestions = [];
+        const TOTALS = {
+            Easy: 307,
+            Medium: 426,
+            Hard: 253
+        };
 
         async function getAllQuestions() {
             const res = await fetch(`${BASE}/leetcode/user`, {
@@ -645,48 +672,115 @@
                 container.innerHTML = "<p>No data found</p>";
                 return;
             }
+allQuestions = await res.json();
+populateCategoryFilter(allQuestions);
+renderQuestions(allQuestions);
 
-            const data = await res.json();
-
-            let easy = 0, medium = 0, hard = 0;
-
-            data.forEach(q => {
-                if (q.level === "Easy") easy++;
-                if (q.level === "Medium") medium++;
-                if (q.level === "Hard") hard++;
-
-                container.innerHTML += `
-    <div class="question-item">
-        <div class="question-header" onclick="toggleQuestion(this)">
-            <div>
-                <strong>${q.title}</strong> (${q.level})
-                <div class="question-sub">${q.category}</div>
-            </div>
-            <div class="arrow">▼</div>
-        </div>
-
-        <div class="question-body">
-            <div><strong>Problem ID:</strong> ${q.problemId}</div>
-            <div><strong>Question Number:</strong> ${q.quesNumber}</div>
-            <div><strong>Code:</strong></div>
-            <pre>${q.code}</pre>
-            <div>
-    <strong>Link:</strong>
-            <a href="${q.link}" target="_blank" style="color:#3b82f6;">
-        LeetCode
-            </a>
-        </div>
-            <div><strong>Comments:</strong> ${q.comments || "None"}</div>
-        </div>
-    </div>
-`;
-
-            });
-
-            document.getElementById("easyCount").innerText = easy;
-            document.getElementById("mediumCount").innerText = medium;
-            document.getElementById("hardCount").innerText = hard;
         }
+function populateCategoryFilter(data) {
+    const select = document.getElementById("filterCategory");
+
+    // Clear existing options except "All Categories"
+    select.innerHTML = `<option value="">All Categories</option>`;
+
+    const categories = new Set();
+
+    data.forEach(q => {
+        if (q.category) {
+            categories.add(q.category);
+        }
+    });
+
+    [...categories].sort().forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        select.appendChild(option);
+    });
+}
+
+        function renderQuestions(data) {
+    const container = document.getElementById("questions");
+    container.innerHTML = "";
+
+    let easy = 0, medium = 0, hard = 0;
+
+    data.forEach(q => {
+        if (q.level === "Easy") easy++;
+        if (q.level === "Medium") medium++;
+        if (q.level === "Hard") hard++;
+
+        container.innerHTML += `
+        <div class="question-item">
+            <div class="question-header" onclick="toggleQuestion(this)">
+                <div>
+                    <strong>${q.title}</strong> (${q.level})
+                    <div class="question-sub">${q.category}</div>
+                </div>
+                <div class="arrow">▼</div>
+            </div>
+
+            <div class="question-body">
+                <div><strong>Problem ID:</strong> ${q.problemId}</div>
+                <div><strong>Question Number:</strong> ${q.quesNumber}</div>
+                <div><strong>Code:</strong></div>
+                <pre>${q.code}</pre>
+                <div>
+                    <strong>Link:</strong>
+                    <a href="${q.link}" target="_blank" style="color:#3b82f6;">
+                        LeetCode
+                    </a>
+                </div>
+                <div><strong>Comments:</strong> ${q.comments || "None"}</div>
+            </div>
+        </div>
+        `;
+    });
+
+    updateProgress("easyCount", easy, TOTALS.Easy, "#22c55e");
+updateProgress("mediumCount", medium, TOTALS.Medium, "#f59e0b");
+updateProgress("hardCount", hard, TOTALS.Hard, "#ef4444");
+
+}
+
+function updateProgress(id, solved, total, color) {
+    const percent = Math.min((solved / total) * 100, 100);
+    const circle = document.getElementById(id);
+
+    circle.innerHTML = `
+        <div style="position:relative; z-index:2; text-align:center;">
+            <div style="font-size:18px; font-weight:700;">
+                ${solved}
+            </div>
+            <div style="font-size:11px; opacity:0.7;">
+                / ${total}
+            </div>
+            <div style="font-size:10px; margin-top:2px; opacity:0.5;">
+                ${percent.toFixed(1)}%
+            </div>
+        </div>
+    `;
+
+    circle.style.background = `
+        conic-gradient(${color} ${percent}%,
+        rgba(255,255,255,0.06) ${percent}%)
+    `;
+}
+
+
+
+function applyFilters() {
+    const selectedCategory = document.getElementById("filterCategory").value;
+
+    let filtered = allQuestions;
+
+    if (selectedCategory) {
+        filtered = filtered.filter(q => q.category === selectedCategory);
+    }
+
+    renderQuestions(filtered);
+}
+
 
         async function storeQuestion() {
             const messageBox = document.getElementById("message");
