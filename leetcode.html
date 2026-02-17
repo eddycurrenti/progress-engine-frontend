@@ -673,6 +673,7 @@
                 return;
             }
 allQuestions = await res.json();
+allQuestions.reverse();   // start from end
 populateCategoryFilter(allQuestions);
 renderQuestions(allQuestions);
 
